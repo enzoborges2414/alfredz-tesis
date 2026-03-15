@@ -91,7 +91,7 @@ Montevideo,  \@date
 {\ifthenelse{\equal{\@cclicense}{by-nd}}{\includegraphics{figures/cc/by-nd.png}}
 {\ifthenelse{\equal{\@cclicense}{by-nc}}{\includegraphics{figures/cc/by-nc.png}}
 {\ifthenelse{\equal{\@cclicense}{by-nc-sa}}{\includegraphics{figures/cc/by-nc-sa.png}}
-{\ifthenelse{\equal{\@cclicense}{by-nc-nd}}{\includegraphics{figures/cc/by-nc-nd.png}}{}}}}}}}
+{\ifthenelse{\equal{\@cclicense}{by-nc-nd}}{\includegraphics{figures/cc/by-nc-nd.png}}{}}}}}}
 \end{minipage}
 &
 \begin{minipage}{0.7\textwidth}
