@@ -28,6 +28,8 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
+          compiler: pdflatex
+          args: -pdf -file-line-error -interaction=nonstopmode
           latexmk_use_lualatex: false
           latexmk_use_xelatex: false
 
@@ -51,6 +53,8 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
+          compiler: pdflatex
+          args: -pdf -file-line-error -interaction=nonstopmode
           latexmk_use_lualatex: false
           latexmk_use_xelatex: false
 
@@ -79,8 +83,8 @@ jobs:
       - name: Generar PDF diff visual (solo páginas modificadas)
         run: |
           mkdir -p base_pages pr_pages diff_pages changed_pages
-          pdftoppm -png -r 150 -pad 4 pdfs/base-pdf/main.pdf base_pages/page
-          pdftoppm -png -r 150 -pad 4 pdfs/tesis-pdf/main.pdf pr_pages/page
+          pdftoppm -png -r 150 pdfs/base-pdf/main.pdf base_pages/page
+          pdftoppm -png -r 150 pdfs/tesis-pdf/main.pdf pr_pages/page
           BASE_COUNT=$(ls base_pages/*.png 2>/dev/null | wc -l)
           PR_COUNT=$(ls pr_pages/*.png 2>/dev/null | wc -l)
           MAX_PAGES=$((BASE_COUNT > PR_COUNT ? BASE_COUNT : PR_COUNT))
