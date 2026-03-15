@@ -54,6 +54,7 @@ jobs:
 
       - name: Guardar PDF en rama release (pdf/) y publicar
         run: |
+          cp tesis-pdf/main.pdf /tmp/main.pdf
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin
@@ -66,8 +67,8 @@ jobs:
           fi
           mkdir -p pdf
           SHORT_SHA="${GITHUB_SHA:0:7}"
-          cp tesis-pdf/main.pdf "pdf/main-${SHORT_SHA}.pdf"
-          cp tesis-pdf/main.pdf main.pdf
+          cp /tmp/main.pdf "pdf/main-${SHORT_SHA}.pdf"
+          cp /tmp/main.pdf main.pdf
           git add main.pdf pdf/
           git status --short
           if ! git diff --cached --quiet; then
