@@ -1,98 +1,38 @@
-% Template LaTeX para Informes de Proyectos de Grado de Computación
-% InCo, Facultad de Ingeniería, Universidad de la República
-% Adaptado a la arquitectura: chapters/, figures/, bib/
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{natbib}
 
-\documentclass{prgrado}
+\graphicspath{{figures/}}
+\bibliographystyle{plainnat}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Datos del Proyecto
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\title{Mapeo 3D autónomo con un robot de servicio AlfredZ}
-
-\author{Enzo Borges, Christian Deleon, Román Alvarez}
-
+\title{Título de la tesis}
+\author{Tu nombre}
 \date{\today}
 
-\supervisor{Federico Andrade}
-\cosupervisor{Facundo Benavides}
-
-\cclicense{by}{4.0}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\hypersetup{
-  colorlinks   = true,
-  urlcolor     = blue,
-  linkcolor    = blue,
-  citecolor    = red
-}
-
 \begin{document}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Parte inicial
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\frontmatter
-
 \maketitle
-
-\chapter*{Agradecimientos}
-Agradecer, siempre es bueno agradecer.
-
-\chapter*{Resumen}
-El resumen (200-500 palabras) debe dar una idea completa de todo el
-proyecto, mencionando claramente los formalismos, técnicas, herramientas y lenguas
-utilizados. No debe limitarse a describir el problema abordado, sino que debe describir
-la solución del problema, con una evaluación de la misma. No debe incluir referencias
-bibliográficas ni referencias a otras partes del informe. Tampoco debe utilizar
-acrónimos sin explicar su significado.
-
-\vfill
-\keywords{Template, Proyectos de Grado, Computación}
-
 \tableofcontents
-\newpage
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Parte central
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\mainmatter
 
 \chapter{Introducción}
 \input{chapters/intro}
 
-\chapter{Revisión de antecedentes}
+\chapter{Trabajo relacionado}
 \input{chapters/related}
 
-\chapter{Parte Central}
+\chapter{Metodología}
 \input{chapters/methodology}
 
-\chapter{Experimentación}
+\chapter{Experimentos y resultados}
 \input{chapters/experiments}
 
-\chapter{Conclusiones y Trabajo Futuro}
+\chapter{Conclusiones}
 \input{chapters/conclusions}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Parte final
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\backmatter
-
-\newpage
-\bibliographystyle{apacite}
 \bibliography{bib/references}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Anexos
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{appendix}
-\chapter{Anexo 1}
-\input{chapters/appendix}
-\end{appendix}
 
 \end{document}
