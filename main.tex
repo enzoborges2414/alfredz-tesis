@@ -1,0 +1,38 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{natbib}
+
+\graphicspath{{figures/}}
+\bibliographystyle{plainnat}
+
+\title{Título de la tesis}
+\author{Tu nombre}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Introducción}
+\input{chapters/intro}
+
+\chapter{Trabajo relacionado}
+\input{chapters/related}
+
+\chapter{Metodología}
+\input{chapters/methodology}
+
+\chapter{Experimentos y resultados}
+\input{chapters/experiments}
+
+\chapter{Conclusiones}
+\input{chapters/conclusions}
+
+\bibliography{bib/references}
+
+\end{document}
