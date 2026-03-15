@@ -1,0 +1,30 @@
+# LaTeX auxiliary files
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fmt
+*.synctex.gz
+*.synctex(busy)
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.fdb_latexmk
+
+# Build output (el PDF se genera en Actions; opcional subirlo a releases)
+# *.pdf
+
+# Editor/OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Carpeta de output local si usas latexmk -outputdir=build
+/build/

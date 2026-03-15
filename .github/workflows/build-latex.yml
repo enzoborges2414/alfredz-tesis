@@ -1,0 +1,74 @@
+name: Compilar LaTeX → PDF
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  latex-lint:
+    uses: ./.github/workflows/latex-lint.yml
+
+  build:
+    needs: [latex-lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compilar LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_use_lualatex: false
+          latexmk_use_xelatex: false
+
+      - name: Subir PDF como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tesis-pdf
+          path: main.pdf
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      github.actor != 'github-actions[bot]' &&
+      !contains(github.event.head_commit.message, '[skip ci]')
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Descargar PDF
+        uses: actions/download-artifact@v4
+        with:
+          name: tesis-pdf
+
+      - name: Guardar PDF en rama release (pdf/) y publicar
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+          git fetch origin release 2>/dev/null || true
+          if git show-ref --verify refs/remotes/origin/release 2>/dev/null; then
+            git checkout release
+          else
+            git checkout --orphan release
+            git reset --hard
+          fi
+          mkdir -p pdf
+          SHORT_SHA="${GITHUB_SHA:0:7}"
+          cp tesis-pdf/main.pdf "pdf/main-${SHORT_SHA}.pdf"
+          cp tesis-pdf/main.pdf main.pdf
+          git add main.pdf pdf/
+          git status --short
+          if ! git diff --cached --quiet; then
+            git commit -m "PDF: ${{ github.sha }}"
+            git push origin release
+          fi

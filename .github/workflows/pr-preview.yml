@@ -1,0 +1,142 @@
+# Preview de PR: compila PDF del PR y de main, genera diff visual y comenta en el PR.
+# Solo para review; el pasaje a producción lo hace build-latex.yml en push a main.
+
+name: PR Preview (PDF diff)
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  latex-lint:
+    uses: ./.github/workflows/latex-lint.yml
+
+  build:
+    needs: [latex-lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compilar LaTeX (PR)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_use_lualatex: false
+          latexmk_use_xelatex: false
+
+      - name: Subir PDF como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tesis-pdf
+          path: main.pdf
+
+  build-base:
+    needs: [latex-lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout base (main)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+
+      - name: Compilar LaTeX (base)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_use_lualatex: false
+          latexmk_use_xelatex: false
+
+      - name: Subir PDF base como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: base-pdf
+          path: main.pdf
+
+  pdf-diff:
+    needs: [build, build-base]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar PDFs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-pdf'
+          path: pdfs
+          merge-multiple: false
+
+      - name: Instalar dependencias para diff visual
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils imagemagick
+
+      - name: Generar PDF diff visual (solo páginas modificadas)
+        run: |
+          mkdir -p base_pages pr_pages diff_pages changed_pages
+          pdftoppm -png -r 150 -pad 4 pdfs/base-pdf/main.pdf base_pages/page
+          pdftoppm -png -r 150 -pad 4 pdfs/tesis-pdf/main.pdf pr_pages/page
+          BASE_COUNT=$(ls base_pages/*.png 2>/dev/null | wc -l)
+          PR_COUNT=$(ls pr_pages/*.png 2>/dev/null | wc -l)
+          MAX_PAGES=$((BASE_COUNT > PR_COUNT ? BASE_COUNT : PR_COUNT))
+          i=1
+          while [ $i -le $MAX_PAGES ]; do
+            B="base_pages/page$(printf '%04d' $i).png"
+            P="pr_pages/page$(printf '%04d' $i).png"
+            D="diff_pages/diff-$(printf '%03d' $i).png"
+            if [ -f "$B" ] && [ -f "$P" ]; then
+              compare -metric AE -highlight-color red -lowlight-color white "$B" "$P" "$D" 2>metric.txt || true
+              DIFF=$(cat metric.txt 2>/dev/null | tr -d '\n' | head -c 20)
+              if [ -n "$DIFF" ] && [ "$DIFF" != "0" ]; then
+                cp "$D" "changed_pages/page$(printf '%03d' $i).png"
+              fi
+            elif [ -f "$P" ]; then
+              cp "$P" "changed_pages/page$(printf '%03d' $i).png"
+            elif [ -f "$B" ]; then
+              cp "$B" "changed_pages/page$(printf '%03d' $i).png"
+            fi
+            i=$((i + 1))
+          done
+          FILES=$(find changed_pages -name "*.png" 2>/dev/null | sort -V)
+          if [ -n "$FILES" ]; then
+            convert $FILES pdf-diff.pdf
+          else
+            echo "No visual differences detected"
+            cp pdfs/tesis-pdf/main.pdf pdf-diff.pdf
+          fi
+
+      - name: Subir PDF diff como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-diff
+          path: pdf-diff.pdf
+
+  pr-comment:
+    needs: [build, build-base, pdf-diff]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Comentar preview en el PR (comentario persistente)
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: pdf-preview
+          message: |
+            ## Preview del PDF
+
+            ✅ **Build completado.** Descargá los artifacts desde esta ejecución:
+
+            - **`tesis-pdf`** – PDF de este PR (cambios)
+            - **`base-pdf`** – PDF de `main` (base)
+            - **`pdf-diff`** – Diff visual entre ambos (rojo = diferencias)
+
+            👉 ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Al final de la página, sección *Artifacts*.
+
+            *Preview generada por el workflow PR Preview (PDF diff).*

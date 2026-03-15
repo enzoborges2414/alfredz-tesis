@@ -1,0 +1,84 @@
+# Workflow reutilizable: lint y checks de LaTeX (ChkTeX, TODOs, figuras, referencias, labels).
+# Llamar desde otros workflows con uses: ./.github/workflows/latex-lint.yml
+
+name: LaTeX Lint
+
+on:
+  workflow_call:
+
+jobs:
+  latex-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar herramientas
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chktex texlive-latex-extra texlive-bibtex-extra
+
+      - name: Lint LaTeX con ChkTeX
+        run: |
+          echo "Running ChkTeX on all .tex files..."
+          git ls-files "*.tex" -z | xargs -0 -r chktex -q -n1 -n8 -n46
+
+      - name: Buscar TODOs o FIXMEs
+        run: |
+          FOUND=$(grep -r --include='*.tex' --exclude-dir=.git --exclude-dir=build --exclude-dir=out --exclude-dir=generated -nE '(^|[^%])(TODO|FIXME|\\todo)' . 2>/dev/null || true)
+          if [ -n "$FOUND" ]; then
+            echo "ERROR: Found TODO, FIXME or \\todo in source (excluding commented lines):"
+            echo "$FOUND"
+            exit 1
+          fi
+          echo "No TODO/FIXME found."
+
+      - name: Verificar figuras referenciadas
+        run: |
+          echo "Checking includegraphics files..."
+          FAIL=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            if [ ! -f "$f" ] && [ ! -f "${f}.pdf" ] && [ ! -f "${f}.png" ] && [ ! -f "${f}.jpg" ]; then
+              echo "Missing figure: $f"
+              FAIL=1
+            fi
+          done < <(grep -r --include='*.tex' --exclude-dir=.git --exclude-dir=build --exclude-dir=out --exclude-dir=generated -hoP '\\includegraphics(?:\[[^\]]*\])?\{\K[^}]+' . 2>/dev/null | sort -u)
+          [ "$FAIL" -eq 0 ] || exit 1
+          echo "All referenced figures exist."
+
+      - name: Quick compile check
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_use_lualatex: false
+          latexmk_use_xelatex: false
+          args: -interaction=nonstopmode -halt-on-error -file-line-error
+
+      - name: Check referencias y citas indefinidas
+        run: |
+          if grep -E "LaTeX Warning: (Reference|Citation).*undefined" main.log 2>/dev/null; then
+            echo "ERROR: Undefined references or citations detected in main.log"
+            exit 1
+          fi
+          echo "No undefined references or citations."
+
+      - name: Check LaTeX warnings importantes
+        run: |
+          if grep -E "Overfull \\\\hbox|Underfull \\\\hbox" main.log 2>/dev/null; then
+            echo "::warning file=main.log::Layout issues detected (Overfull/Underfull hbox). Revisar el log."
+          fi
+
+      - name: Detectar labels no usados
+        run: |
+          echo "Checking for unused \\label{}..."
+          FAIL=0
+          while IFS= read -r lab; do
+            [ -z "$lab" ] && continue
+            if ! grep -r --include='*.tex' --exclude-dir=.git --exclude-dir=build --exclude-dir=out --exclude-dir=generated -q -E "(\\\\ref|\\\\cref|\\\\pageref|\\\\autoref|\\\\eqref|\\\\nameref)\{${lab}\}" . 2>/dev/null; then
+              echo "Unused label: $lab"
+              FAIL=1
+            fi
+          done < <(grep -r --include='*.tex' --exclude-dir=.git --exclude-dir=build --exclude-dir=out --exclude-dir=generated -hoP '\\label\{\K[^}]+' . 2>/dev/null | sort -u)
+          [ "$FAIL" -eq 0 ] || exit 1
+          echo "All labels are referenced."
