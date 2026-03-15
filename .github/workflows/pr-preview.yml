@@ -28,6 +28,7 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
+          compiler: pdflatex
           latexmk_use_lualatex: false
           latexmk_use_xelatex: false
 
@@ -51,6 +52,7 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
+          compiler: pdflatex
           latexmk_use_lualatex: false
           latexmk_use_xelatex: false
 

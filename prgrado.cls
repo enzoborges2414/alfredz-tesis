@@ -82,26 +82,24 @@ Montevideo,  \@date
 
 \newcommand{\makelicense}[0]{%
 \clearpage\null\vfill
-\pagestyle{empty}
-
+\pagestyle{empty}%
 \begin{tabular}{l | l}
-\begin{minipage}{0.28\textwidth}
-\ifthenelse{\equal{\@cclicense}{by}}{\includegraphics{figures/cc/by.png}}
-{\ifthenelse{\equal{\@cclicense}{by-sa}}{\includegraphics{figures/cc/by-sa.png}}
-{\ifthenelse{\equal{\@cclicense}{by-nd}}{\includegraphics{figures/cc/by-nd.png}}
-{\ifthenelse{\equal{\@cclicense}{by-nc}}{\includegraphics{figures/cc/by-nc.png}}
-{\ifthenelse{\equal{\@cclicense}{by-nc-sa}}{\includegraphics{figures/cc/by-nc-sa.png}}
-{\ifthenelse{\equal{\@cclicense}{by-nc-nd}}{\includegraphics{figures/cc/by-nc-nd.png}}{}}}}}}
+\begin{minipage}{0.28\textwidth}%
+\ifthenelse{\equal{\@cclicense}{by}}{\mbox{\includegraphics{figures/cc/by.png}}}{%
+\ifthenelse{\equal{\@cclicense}{by-sa}}{\mbox{\includegraphics{figures/cc/by-sa.png}}}{%
+\ifthenelse{\equal{\@cclicense}{by-nd}}{\mbox{\includegraphics{figures/cc/by-nd.png}}}{%
+\ifthenelse{\equal{\@cclicense}{by-nc}}{\mbox{\includegraphics{figures/cc/by-nc.png}}}{%
+\ifthenelse{\equal{\@cclicense}{by-nc-sa}}{\mbox{\includegraphics{figures/cc/by-nc-sa.png}}}{%
+\ifthenelse{\equal{\@cclicense}{by-nc-nd}}{\mbox{\includegraphics{figures/cc/by-nc-nd.png}}}{}}}}}}%
 \end{minipage}
 &
-\begin{minipage}{0.7\textwidth}
+\begin{minipage}{0.7\textwidth}%
 {\footnotesize \textbf{\@title}\ por \@author\ tiene licencia \href{https://creativecommons.org/licenses/\@cclicense/\@ccversion}{CC
-\ifthenelse{\equal{\@cclicense}{by}}{Atribución}
-{\ifthenelse{\equal{\@cclicense}{by-sa}}{Atribución - Compartir Igual}
-{\ifthenelse{\equal{\@cclicense}{by-nd}}{Atribución - Sin Derivadas}
-{\ifthenelse{\equal{\@cclicense}{by-nc}}{Atribución - No Comercial}
-{\ifthenelse{\equal{\@cclicense}{by-nc-sa}}{Atribución - No Comercial - Compartir Igual }
-{\ifthenelse{\equal{\@cclicense}{by-nc-nd}}{Atribución - No Comercial - Sin Derivadas}{}}}}}} \@ccversion}.}
+\ifthenelse{\equal{\@cclicense}{by}}{Atribución}{%
+\ifthenelse{\equal{\@cclicense}{by-sa}}{Atribución - Compartir Igual}{%
+\ifthenelse{\equal{\@cclicense}{by-nd}}{Atribución - Sin Derivadas}{%
+\ifthenelse{\equal{\@cclicense}{by-nc}}{Atribución - No Comercial}{%
+\ifthenelse{\equal{\@cclicense}{by-nc-sa}}{Atribución - No Comercial - Compartir Igual}{%
+\ifthenelse{\equal{\@cclicense}{by-nc-nd}}{Atribución - No Comercial - Sin Derivadas}{}}}}}} \@ccversion}.}%
 \end{minipage}
-\end{tabular}
-}
+\end{tabular} }
