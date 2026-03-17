@@ -1,0 +1,30 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Análisis comparativo de estrategias}
+\label{sec:exp_comparativo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begingroup
+\color{red}
+
+[SCAFFOLDING --- Esta sección cierra el capítulo de experimentación con una comparación directa de las tres estrategias propuestas (Vecindad, Ruta Planificada y Predictiva) entre sí y frente a la línea de base Greedy. Se estructura en cuatro bloques:]
+
+\textbf{1. Tabla unificada de resultados.}
+Una tabla con las cuatro estrategias (Vecindad, Ruta Planificada, Predictiva, Greedy) como columnas y las 10 configuraciones (entorno $\times$ actores) como filas, para cada una de las tres métricas. Permite al lector identificar de un vistazo cuál estrategia domina en cada configuración y métrica.
+
+\textbf{2. Comparación por puntuación compuesta.}
+Figura de barras agrupadas con la puntuación compuesta de las cuatro estrategias por configuración, y tabla de recuento de victorias (cuántas configuraciones gana cada estrategia en cada métrica y en score compuesto). Se discute si la progresión de complejidad (Vecindad $\to$ Ruta Planificada $\to$ Predictiva) se traduce en una mejora progresiva de resultados o si el trade-off con el costo computacional neutraliza parte del beneficio.
+
+\textbf{3. Trade-offs y recomendaciones de uso.}
+Análisis de los tres trade-offs centrales del sistema:
+\begin{itemize}
+    \item \textbf{Precisión vs.\ exploración}: Predictiva logra la mayor precisión (menores ghost cells) pero sacrifica exploración en ejecuciones cortas. Greedy maximiza exploración pero acumula ruido en el mapa con densidad alta de actores.
+    \item \textbf{Complejidad vs.\ rendimiento}: el costo computacional creciente de Vecindad $\to$ Ruta Planificada $\to$ Predictiva se justifica en configuraciones con densidad media-alta de actores ($\geq 10$), donde la ganancia en precisión compensa la pérdida de exploración.
+    \item \textbf{Duración del experimento}: Greedy es preferible en exploraciones cortas con pocos actores; Predictiva es preferible en exploraciones prolongadas o con muchos actores.
+\end{itemize}
+
+\textbf{4. Conclusión del capítulo.}
+Párrafo de cierre que sintetiza cuál estrategia valida mejor los objetivos del proyecto y abre la discusión hacia las conclusiones generales (Capítulo 5).
+
+[--- Completar cuando estén disponibles los análisis de Vecindad y Ruta Planificada.]
+
+\endgroup
