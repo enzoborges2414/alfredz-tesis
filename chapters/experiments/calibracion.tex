@@ -3,11 +3,175 @@
 \label{sec:exp_calibracion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textcolor{red}{%
-[SCAFFOLDING --- Esta sección describe la etapa de calibración, cuyo objetivo fue determinar los valores óptimos de los hiperparámetros $\lambda$ (peso del costo dinámico) y $\mu$ (peso del costo de trayectoria) de la función de utilidad~(\ref{eq:utilidad}).
-Se realizaron experimentos sistemáticos variando $\lambda \in \{0, 1, 5, 10\}$ y $\mu \in \{0{,}001, 0{,}01, 0{,}1\}$ en los entornos house y office con distintas densidades de actores.
-Los resultados determinaron que los valores $\lambda = 5$ y $\mu = 0{,}01$ maximizan la puntuación compuesta en el conjunto de configuraciones evaluadas; estos valores se emplean de forma fija en todas las etapas de validación.
---- Completar con el análisis preliminar de calibración cuando esté disponible.%
-]}
+La función de utilidad~(\ref{eq:utilidad}) incorpora dos hiperparámetros ---$\lambda$ y $\mu$--- cuyos valores determinan en qué medida el planificador NBV penaliza la interferencia dinámica y el costo de trayecto, respectivamente. Valores inadecuados pueden llevar al robot a ignorar la presencia de personas ($\lambda$ demasiado bajo) o a seleccionar fronteras subóptimas por sobre-penalizar rutas largas ($\mu$ demasiado alto). La etapa de calibración tuvo como objetivo identificar empíricamente la combinación de hiperparámetros que maximiza el desempeño global del sistema, medido con la puntuación compuesta definida en la Sección~\ref{sec:exp_score}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Diseño de los experimentos de calibración}
+\label{sec:exp_cal_diseno}
+
+Se evaluaron todas las combinaciones del producto cartesiano $\lambda \in \{0,\, 1,\, 5\}$ y $\mu \in \{0{,}01;\, 0{,}5;\, 2{,}0\}$, aplicadas sobre las tres estrategias de utilidad dinámica, lo que da lugar a $3 \times 3 \times 3 = 27$ experimentos (S001--S027). La Tabla~\ref{tab:cal_grid} detalla la asignación de identificadores a cada combinación.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Grid de experimentos de calibración. Cada celda contiene el identificador del experimento correspondiente. S015 no produjo datos válidos y fue excluido del análisis.}
+    \label{tab:cal_grid}
+    \begin{tabular}{cclll}
+        \toprule
+        $\lambda$ & $\mu$ & \textbf{Frontera} & \textbf{Ruta Planificada} & \textbf{Predictiva} \\
+        \midrule
+        0 & 0,01 & S001 & S010 & S019 \\
+        0 & 0,5  & S002 & S011 & S020 \\
+        0 & 2,0  & S003 & S012 & S021 \\
+        1 & 0,01 & S004 & S013 & S022 \\
+        1 & 0,5  & S005 & S014 & S023 \\
+        1 & 2,0  & S006 & S015$^{*}$ & S024 \\
+        5 & 0,01 & S007 & S016 & S025 \\
+        5 & 0,5  & S008 & S017 & S026 \\
+        5 & 2,0  & S009 & S018 & S027 \\
+        \bottomrule
+        \multicolumn{5}{l}{\footnotesize $^{*}$ Experimento fallido; excluido del análisis.}
+    \end{tabular}
+\end{table}
+
+Todos los experimentos se ejecutaron en el entorno \textbf{house} con \textbf{5 actores} dinámicos y una duración de \textbf{1800 segundos}. Se realizó una única ejecución por combinación. La elección de un entorno y densidad de actores fijos permite aislar el efecto de los hiperparámetros de otras variables del sistema.
+
+\subsection{Resultados por estrategia}
+\label{sec:exp_cal_estrategia}
+
+Las Tablas~\ref{tab:cal_rank_e1}, \ref{tab:cal_rank_e2} y~\ref{tab:cal_rank_e3} presentan el ranking completo de los experimentos de calibración para cada estrategia, ordenados por puntuación compuesta descendente. La Figura~\ref{fig:cal_ranking_estrategia} compara los scores de cada estrategia en función de la combinación de hiperparámetros.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Ranking de experimentos de calibración --- Vecindad. Mejor combinación: $\lambda=0$, $\mu=0{,}01$ (S001).}
+    \label{tab:cal_rank_e1}
+    \begin{tabular}{clrrrrrr}
+        \toprule
+        \textbf{Pos.} & \textbf{Exp} & $\lambda$ & $\mu$ & \textbf{Ghost} & \textbf{Entropía} & \textbf{Frames} & \textbf{Score} \\
+        \midrule
+        1 & \textbf{S001} & 0 & 0,01 & 30  & $1{,}64\times10^{-4}$ & 217 & \textbf{0,8772} \\
+        2 & S006 & 1 & 2,0  &  0  & $1{,}55\times10^{-4}$ & 158 & 0,8091 \\
+        3 & S005 & 1 & 0,5  &  9  & $1{,}48\times10^{-4}$ & 179 & 0,7708 \\
+        4 & S008 & 5 & 0,5  & 31  & $1{,}34\times10^{-4}$ & 198 & 0,6874 \\
+        5 & S007 & 5 & 0,01 & 108 & $1{,}50\times10^{-4}$ & 217 & 0,6666 \\
+        6 & S002 & 0 & 0,5  & 119 & $1{,}49\times10^{-4}$ & 210 & 0,6584 \\
+        7 & S004 & 1 & 0,01 &  41 & $1{,}22\times10^{-4}$ & 179 & 0,6520 \\
+        8 & S003 & 0 & 2,0  & 347 & $1{,}94\times10^{-4}$ & 174 & 0,5717 \\
+        9 & S009 & 5 & 2,0  &  79 & $7{,}5\times10^{-5}$  & 143 & 0,3089 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Ranking de experimentos de calibración --- Ruta Planificada. Mejor combinación: $\lambda=5$, $\mu=0{,}01$ (S016). S015 excluido por fallo.}
+    \label{tab:cal_rank_e2}
+    \begin{tabular}{clrrrrrr}
+        \toprule
+        \textbf{Pos.} & \textbf{Exp} & $\lambda$ & $\mu$ & \textbf{Ghost} & \textbf{Entropía} & \textbf{Frames} & \textbf{Score} \\
+        \midrule
+        1 & \textbf{S016} & 5 & 0,01 &  70 & $2{,}30\times10^{-4}$ & 601 & \textbf{0,8436} \\
+        2 & S011 & 0 & 0,5  &  29 & $1{,}83\times10^{-4}$ & 421 & 0,8329 \\
+        3 & S012 & 0 & 2,0  &   0 & $1{,}47\times10^{-4}$ & 390 & 0,8217 \\
+        4 & S010 & 0 & 0,01 &   0 & $1{,}23\times10^{-4}$ & 380 & 0,7830 \\
+        5 & S013 & 1 & 0,01 &  67 & $9{,}6\times10^{-5}$  & 355 & 0,5697 \\
+        6 & S014 & 1 & 0,5  & 126 & $1{,}52\times10^{-4}$ & 440 & 0,5584 \\
+        7 & S018 & 5 & 2,0  & 179 & $1{,}02\times10^{-4}$ & 342 & 0,2920 \\
+        8 & S017 & 5 & 0,5  & 156 & $4{,}2\times10^{-5}$  & 307 & 0,0514 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Ranking de experimentos de calibración --- Predictiva. Mejor combinación: $\lambda=0$, $\mu=0{,}5$ (S020).}
+    \label{tab:cal_rank_e3}
+    \begin{tabular}{clrrrrrr}
+        \toprule
+        \textbf{Pos.} & \textbf{Exp} & $\lambda$ & $\mu$ & \textbf{Ghost} & \textbf{Entropía} & \textbf{Frames} & \textbf{Score} \\
+        \midrule
+        1 & \textbf{S020} & 0 & 0,5  &  56 & $2{,}13\times10^{-4}$ & 530 & \textbf{0,8953} \\
+        2 & S025 & 5 & 0,01 &  35 & $1{,}74\times10^{-4}$ & 500 & 0,8418 \\
+        3 & S019 & 0 & 0,01 &   0 & $1{,}33\times10^{-4}$ & 460 & 0,7888 \\
+        4 & S023 & 1 & 0,5  &  11 & $1{,}18\times10^{-4}$ & 470 & 0,7644 \\
+        5 & S021 & 0 & 2,0  &  35 & $1{,}24\times10^{-4}$ & 450 & 0,7177 \\
+        6 & S027 & 5 & 2,0  &  56 & $1{,}07\times10^{-4}$ & 420 & 0,6146 \\
+        7 & S024 & 1 & 2,0  &   4 & $5{,}5\times10^{-5}$  & 410 & 0,5943 \\
+        8 & S026 & 5 & 0,5  & 214 & $1{,}65\times10^{-4}$ & 490 & 0,4937 \\
+        9 & S022 & 1 & 0,01 &  99 & $7{,}1\times10^{-5}$  & 380 & 0,2504 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/experiments/calibracion/03_ranking_por_estrategia.png}
+    \caption{Score compuesto por experimento, agrupado por estrategia. Cada barra corresponde a una combinación $(\lambda, \mu)$. Se observa que los óptimos por estrategia corresponden a combinaciones distintas.}
+    \label{fig:cal_ranking_estrategia}
+\end{figure}
+
+Los óptimos por estrategia no coinciden: Frontera alcanza su mejor resultado con $\lambda=0$, $\mu=0{,}01$ (S001, score 0,8772); Ruta Planificada con $\lambda=5$, $\mu=0{,}01$ (S016, score 0,8436); y Predictiva con $\lambda=0$, $\mu=0{,}5$ (S020, score 0,8953). Esta divergencia indica que la respuesta óptima a los hiperparámetros depende del mecanismo de cálculo del costo dinámico de cada estrategia, y motiva un análisis global para identificar la combinación más robusta.
+
+\subsection{Análisis global de hiperparámetros}
+\label{sec:exp_cal_global}
+
+Para identificar la combinación de hiperparámetros que ofrece el mejor rendimiento promedio con independencia de la estrategia utilizada, se calculó el score promedio de cada par $(\lambda, \mu)$ sobre los tres experimentos correspondientes (uno por estrategia). La Tabla~\ref{tab:cal_lambda_mu} presenta los resultados ordenados por score promedio descendente, y la Figura~\ref{fig:cal_combinaciones} los visualiza.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Score promedio por combinación $(\lambda, \mu)$ considerando las tres estrategias. La combinación $\lambda=5$, $\mu=0{,}01$ ocupa el primer lugar.}
+    \label{tab:cal_lambda_mu}
+    \begin{tabular}{rrrrrr}
+        \toprule
+        \textbf{Pos.} & $\lambda$ & $\mu$ & \textbf{Score prom.} & \textbf{Score máx.} & \textbf{Score mín.} \\
+        \midrule
+        1 & 5 & 0,01 & \textbf{0,7897} & 0,8780 & 0,6810 \\
+        2 & 0 & 0,5  & 0,7882 & 0,8640 & 0,6707 \\
+        3 & 0 & 0,01 & 0,7812 & 0,8425 & 0,7502 \\
+        4 & 1 & 0,5  & 0,7282 & 0,7891 & 0,6605 \\
+        5 & 1 & 2,0  & 0,7030 & 0,8167 & 0,5892 \\
+        6 & 0 & 2,0  & 0,6715 & 0,7918 & 0,5167 \\
+        7 & 1 & 0,01 & 0,5521 & 0,7007 & 0,3399 \\
+        8 & 5 & 0,5  & 0,5397 & 0,7280 & 0,2986 \\
+        9 & 5 & 2,0  & 0,5276 & 0,6280 & 0,4770 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/experiments/calibracion/05_combinaciones_lambda_mu.png}
+    \caption{Score promedio por combinación $(\lambda, \mu)$ sobre las tres estrategias. Las tres primeras combinaciones tienen scores promedio similares (0,779--0,790), con $\lambda=5$, $\mu=0{,}01$ a la cabeza.}
+    \label{fig:cal_combinaciones}
+\end{figure}
+
+Las Figuras~\ref{fig:cal_lambda} y~\ref{fig:cal_mu} muestran el efecto individual de cada hiperparámetro promediando sobre todos los valores del otro y sobre las tres estrategias.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/experiments/calibracion/06_lambda_individual.png}
+    \caption{Efecto de $\lambda$ sobre la puntuación compuesta promedio (promediando sobre todos los valores de $\mu$ y las tres estrategias). $\lambda=0$ obtiene el mayor promedio individual (0,7470), mientras que $\lambda=5$ presenta el menor (0,6190).}
+    \label{fig:cal_lambda}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/experiments/calibracion/07_mu_individual.png}
+    \caption{Efecto de $\mu$ sobre la puntuación compuesta promedio (promediando sobre todos los valores de $\lambda$ y las tres estrategias). $\mu=0{,}01$ es consistentemente el mejor valor en todas las estrategias (0,7077).}
+    \label{fig:cal_mu}
+\end{figure}
+
+El análisis individual revela que $\lambda=0$ obtiene el mayor promedio por separado (0,7470 frente a 0,6559 de $\lambda=1$ y 0,6190 de $\lambda=5$), mientras que $\mu=0{,}01$ es el mejor valor de $\mu$ (0,7077 frente a 0,6854 y 0,6254). Sin embargo, el ranking por combinaciones posiciona $\lambda=5$, $\mu=0{,}01$ en primer lugar porque esa pareja específica produce resultados más equilibrados entre estrategias que $\lambda=0$ con cualquier valor de $\mu$.
+
+\subsection{Selección de parámetros para la validación}
+\label{sec:exp_cal_seleccion}
+
+La selección de $\lambda=5$, $\mu=0{,}01$ como configuración fija para todas las etapas de validación se fundamenta en tres criterios complementarios:
+
+\begin{enumerate}
+    \item \textbf{Necesidad de activar el costo dinámico.} Con $\lambda=0$ la función de utilidad~(\ref{eq:utilidad}) se reduce a $U(v) = IG_{\text{estático}}(v) - \mu \cdot C_{\text{trayecto}}(v)$, haciendo que el término $D(v)$ de cada estrategia quede anulado. Bajo esa condición, las tres estrategias se comportan de forma idéntica y la comparación entre ellas pierde sentido. El uso de $\lambda>0$ es, por tanto, una condición necesaria para que el experimento de validación sea informativo.
+
+    \item \textbf{Mejor rendimiento promedio entre combinaciones con $\lambda>0$.} Entre las combinaciones que satisfacen $\lambda>0$, la pareja $\lambda=5$, $\mu=0{,}01$ alcanza el mayor score promedio global (0,7897), superando a $\lambda=1$, $\mu=0{,}5$ (0,7282) y a las demás alternativas con $\lambda\in\{1,5\}$.
+
+    \item \textbf{Comparación equitativa entre estrategias.} Los óptimos individuales de cada estrategia difieren entre sí; utilizar parámetros distintos por estrategia introduciría un confusor que impediría atribuir diferencias de rendimiento a la estrategia en sí. La adopción de un único par de hiperparámetros garantiza que las comparaciones de la etapa de validación midan exclusivamente el efecto del mecanismo de cálculo del costo dinámico.
+\end{enumerate}
+
+Con base en estos criterios, todos los experimentos de validación descritos en las secciones siguientes se ejecutaron con $\lambda=5$ y $\mu=0{,}01$.
