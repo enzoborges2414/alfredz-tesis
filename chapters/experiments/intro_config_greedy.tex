@@ -1,0 +1,86 @@
+Este capítulo describe los experimentos realizados para validar las estrategias de planificación de siguiente mejor vista (\textit{Next Best View}, NBV) implementadas en AlfredZ. El objetivo es comparar el comportamiento de cada estrategia frente a una línea de base Greedy en entornos de simulación con distintas densidades de actores dinámicos, evaluando métricas de precisión de mapa, exploración y eficiencia de procesado.
+
+Los experimentos se organizaron en tres etapas: una etapa de calibración para determinar los hiperparámetros óptimos del sistema, seguida de tres etapas de validación, una por cada estrategia de utilidad dinámica propuesta. En cada etapa de validación se compara la estrategia correspondiente con la misma línea de base Greedy ejecutada en condiciones idénticas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Configuración experimental}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Entornos de simulación}
+
+Los experimentos se ejecutaron en simulación mediante Gazebo con dos entornos de interior de diferente distribución espacial:
+
+\begin{itemize}
+    \item \textbf{house}: planta residencial compacta, con pasillos estrechos y múltiples habitaciones de tamaño reducido. Su geometría favorece la acumulación de obstáculos dinámicos en zonas de paso.
+    \item \textbf{office}: planta de bloque de oficinas de mayor superficie, con espacios abiertos y áreas de circulación más amplias. La distribución genera rutas de exploración más largas entre fronteras.
+\end{itemize}
+
+En cada entorno se ejecutaron experimentos con cinco niveles de densidad de actores dinámicos: 0, 5, 10, 15 y 20 personas simuladas con trayectorias autónomas. La combinación de dos entornos y cinco niveles de densidad produce \textbf{10 configuraciones} de prueba por estrategia.
+
+Todos los experimentos tuvieron una duración de \textbf{1800 segundos} (30 minutos). AlfredZ contó con los mismos parámetros de navegación, percepción y mapa en todas las ejecuciones, con la única variación en la estrategia de planificación NBV\@.
+
+\subsection{Configuración del sistema}
+
+El sistema AlfredZ integra los siguientes componentes en cada experimento:
+
+\begin{itemize}
+    \item \textbf{RTAB-Map}: construcción y actualización del mapa de ocupación 3D.
+    \item \textbf{Nav2}: planificación de rutas y ejecución de la navegación autónoma.
+    \item \textbf{YOLO}: detección de personas en tiempo real a partir de imágenes de la cámara del robot.
+    \item \textbf{Planificador NBV semántico}: selección de la frontera destino según la estrategia configurada, implementada en el nodo \texttt{ExplorerNode}.
+\end{itemize}
+
+La función de utilidad empleada por las estrategias dinámicas sigue la forma general:
+
+\begin{equation}
+    U(v) = IG_{\text{estático}}(v) - \lambda \cdot D(v) - \mu \cdot C_{\text{trayecto}}(v)
+    \label{eq:utilidad}
+\end{equation}
+
+\noindent donde $IG_{\text{estático}}(v)$ representa la ganancia de información estática de la frontera $v$, $D(v)$ es el costo dinámico calculado según la estrategia activa, $C_{\text{trayecto}}(v)$ es el costo de la ruta planificada hacia $v$, y $\lambda$ y $\mu$ son hiperparámetros que ponderan cada componente. Los valores óptimos $\lambda = 5$ y $\mu = 0{,}01$ se determinaron en la etapa de calibración descrita en la Sección~\ref{sec:exp_calibracion}.
+
+\subsection{Métricas de evaluación}
+
+El desempeño de cada estrategia se evaluó mediante tres métricas registradas al final de cada experimento:
+
+\begin{itemize}
+    \item \textbf{Celdas fantasma (\textit{ghost cells})}: número de celdas del mapa de ocupación que aparecen marcadas como ocupadas en el instante final pero que estaban libres en los tres mapas anteriores del historial. Esta métrica cuantifica la presencia de falsos positivos de ocupación generados por obstáculos dinámicos que ya no se encuentran en esa posición. Un valor \textbf{menor} indica mayor precisión del mapa.
+    \item \textbf{Entropía del mapa (\textit{map entropy})}: entropía de Shannon calculada sobre las celdas conocidas del mapa de ocupación final, definida como $H = -\sum p_i \log_2(p_i)$, donde $p_i = v_i / 100$ para cada celda con valor $v_i \geq 0$. Cuantifica la variedad de estados observados en el mapa y se emplea como indicador del grado de exploración alcanzado. Un valor \textbf{mayor} indica mayor exploración.
+    \item \textbf{Frames totales procesados (\textit{total frames processed})}: contador acumulativo del número de observaciones de cámara procesadas por el \textit{pipeline} de visión durante toda la ejecución del experimento. Se utiliza como indicador de eficiencia y throughput del sistema perceptivo. Un valor \textbf{mayor} indica mayor cantidad de observaciones procesadas.
+\end{itemize}
+
+\subsection{Puntuación compuesta}%
+\label{sec:exp_score}
+
+Para facilitar la comparación global entre estrategias se empleó una puntuación compuesta que agrega las tres métricas en un único valor escalar. Previamente, cada métrica se normalizó mediante normalización min-máx global sobre el conjunto de valores de ambas estrategias comparadas:
+
+\begin{equation}
+    \hat{x} = \frac{x - x_{\min}}{x_{\max} - x_{\min}}%
+    \label{eq:norm}
+\end{equation}
+
+\noindent Dado que en celdas fantasma un valor menor corresponde a mejor desempeño, se invierte la normalización de esta métrica ($1 - \hat{x}_{\text{ghost}}$). La puntuación compuesta se calcula entonces como:
+
+\begin{equation}
+    S = 0{,}40 \cdot (1 - \hat{x}_{\text{ghost}}) + 0{,}35 \cdot \hat{x}_{\text{entropy}} + 0{,}25 \cdot \hat{x}_{\text{frames}}%
+    \label{eq:score}
+\end{equation}
+
+\noindent Los pesos asignados reflejan las prioridades del proyecto: la precisión del mapa (celdas fantasma) recibe el mayor peso (40\%), seguida de la exploración (entropía, 35\%) y la eficiencia de procesado (frames, 25\%).
+
+La estrategia con mayor puntuación compuesta en una configuración dada se considera ganadora en esa configuración. Se utiliza adicionalmente el criterio de ``cuasi-empate o mejor'' cuando la puntuación compuesta de una estrategia alcanza al menos el 90\% de la puntuación de la estrategia contraria.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Estrategia de comparación: Greedy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La estrategia Greedy actúa como línea de base de referencia. En cada ciclo de decisión, selecciona la frontera inexplorada más cercana al robot según distancia euclídea, sin considerar factores dinámicos ni calcular rutas completas. Su función de selección se reduce a:
+
+\begin{equation}
+    v^* = \arg\min_{v \in \mathcal{F}} \| p_{\text{robot}} - c_v \|_2
+\end{equation}
+
+\noindent donde $\mathcal{F}$ es el conjunto de fronteras disponibles y $c_v$ es el centroide de la frontera $v$.
+
+Esta estrategia maximiza el tiempo efectivo de movimiento al minimizar el costo computacional por decisión: no planifica rutas, no estima interferencia dinámica ni predice posiciones futuras de personas. La ausencia de modelado dinámico implica que el robot puede dirigirse repetidamente a zonas con alta actividad de personas, incrementando la probabilidad de generar celdas fantasma en el mapa. Los experimentos Greedy se identifican con los casos G001 a G010, correspondientes a las mismas 10 configuraciones (entorno $\times$ número de actores) que las estrategias de validación.
+
