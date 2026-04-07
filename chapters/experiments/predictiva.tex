@@ -1,4 +1,4 @@
-\section{Predictiva: estimación de interferencia con predicción de trayectorias}
+\section{Predictiva: estimación de interferencia con predicción de trayectorias}%
 \label{sec:exp_e3}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -7,26 +7,23 @@ Esta sección presenta los experimentos de validación para la \textbf{estrategi
 \begin{equation}
     D_{\text{Pred}}(v) = \bigl|\{ p_i : \exists\, (q, t_q) \in \text{ruta\_temporal}(v),\;
     \| q - \hat{p}_i(t_q) \|_2 \leq r \}\bigr|
-    \label{eq:d3}
 \end{equation}
 
 \noindent donde $\hat{p}_i(t_q)$ es la posición predicha de la persona $i$ en el instante $t_q$, estimada a partir del historial de posiciones mediante velocidad promedio:
 
 \begin{equation}
     \hat{p}_i(t) = p_i^{\text{actual}} + \bar{v}_i \cdot t
-    \label{eq:prediccion}
 \end{equation}
 
 La predicción lineal con velocidad promedio permite anticipar qué personas cruzarán la ruta futura del robot, lo que en principio reduce la frecuencia con que se seleccionan fronteras hacia zonas de alta actividad dinámica.
 
 \subsection{Diseño de los experimentos}
-\label{sec:exp_e3_diseno}
 
 Los experimentos de validación de la estrategia Predictiva comprenden \textbf{10 casos de prueba} (TC021–TC030), correspondientes a las configuraciones house $\times$ \{0, 5, 10, 15, 20\} y office $\times$ \{0, 5, 10, 15, 20\} actores, detalladas en la Tabla~\ref{tab:casos_predictiva}. Cada caso se ejecutó con \textbf{tres réplicas independientes}; el valor representativo de la estrategia Predictiva en cada configuración es la mediana de las tres réplicas. La línea de base Greedy corresponde a los experimentos G001–G010, ejecutados una vez por configuración en las mismas condiciones (duración 1800 s, $\lambda = 5$, $\mu = 0{,}01$).
 
 \begin{table}[htbp]
     \centering
-    \caption{Casos de prueba de validación: estrategia Predictiva y Greedy. Cada caso corresponde a una combinación de entorno y número de actores.}
+    \caption{Casos de prueba de validación: estrategia Predictiva y Greedy. Cada caso corresponde a una combinación de entorno y número de actores.}%
     \label{tab:casos_predictiva}
     \begin{tabular}{cccrr}
         \toprule
@@ -50,7 +47,7 @@ La normalización global min-máx de la Ecuación~(\ref{eq:norm}) se aplicó sob
 
 \begin{table}[htbp]
     \centering
-    \caption{Rangos globales de normalización para la comparación Predictiva vs Greedy.}
+    \caption{Rangos globales de normalización para la comparación Predictiva vs Greedy.}%
     \label{tab:rangos_globales_e3}
     \begin{tabular}{lrr}
         \toprule
@@ -64,13 +61,12 @@ La normalización global min-máx de la Ecuación~(\ref{eq:norm}) se aplicó sob
 \end{table}
 
 \subsection{Resultados por métrica}
-\label{sec:exp_e3_metricas}
 
 La Tabla~\ref{tab:e3_ghost} y la Figura~\ref{fig:e3_ghost} presentan los resultados de celdas fantasma para cada configuración.
 
 \begin{table}[htbp]
     \centering
-    \caption{Celdas fantasma (valor final) por configuración: Predictiva vs Greedy. Valores en negrita indican la estrategia ganadora. Menor es mejor.}
+    \caption{Celdas fantasma (valor final) por configuración: Predictiva vs Greedy. Valores en negrita indican la estrategia ganadora. Menor es mejor.}%
     \label{tab:e3_ghost}
     \begin{tabular}{lrrr}
         \toprule
@@ -93,7 +89,7 @@ La Tabla~\ref{tab:e3_ghost} y la Figura~\ref{fig:e3_ghost} presentan los resulta
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\textwidth]{figures/experiments/e3_vs_greedy_05_ghost_normalizado.png}
-    \caption{Celdas fantasma normalizadas por configuración. Valor normalizado mayor indica menor número de celdas fantasma (mejor precisión del mapa). Predictiva supera a Greedy en 7 de las 10 configuraciones.}
+    \caption{Celdas fantasma normalizadas por configuración. Valor normalizado mayor indica menor número de celdas fantasma (mejor precisión del mapa). Predictiva supera a Greedy en 7 de las 10 configuraciones.}%
     \label{fig:e3_ghost}
 \end{figure}
 
@@ -103,7 +99,7 @@ La Tabla~\ref{tab:e3_entropy} y la Figura~\ref{fig:e3_entropy} presentan los res
 
 \begin{table}[htbp]
     \centering
-    \caption{Entropía del mapa (valor final) por configuración: Predictiva vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}
+    \caption{Entropía del mapa (valor final) por configuración: Predictiva vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}%
     \label{tab:e3_entropy}
     \begin{tabular}{lrrr}
         \toprule
@@ -126,7 +122,7 @@ La Tabla~\ref{tab:e3_entropy} y la Figura~\ref{fig:e3_entropy} presentan los res
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\textwidth]{figures/experiments/e3_vs_greedy_06_entropy_normalizado.png}
-    \caption{Entropía del mapa normalizada por configuración. Valor normalizado mayor indica mayor exploración. Greedy supera a Predictiva en 8 de las 10 configuraciones.}
+    \caption{Entropía del mapa normalizada por configuración. Valor normalizado mayor indica mayor exploración. Greedy supera a Predictiva en 8 de las 10 configuraciones.}%
     \label{fig:e3_entropy}
 \end{figure}
 
@@ -136,7 +132,7 @@ La Tabla~\ref{tab:e3_frames} y la Figura~\ref{fig:e3_frames} presentan los resul
 
 \begin{table}[htbp]
     \centering
-    \caption{Frames totales procesados (valor final acumulado) por configuración: Predictiva vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}
+    \caption{Frames totales procesados (valor final acumulado) por configuración: Predictiva vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}%
     \label{tab:e3_frames}
     \begin{tabular}{lrrr}
         \toprule
@@ -159,21 +155,20 @@ La Tabla~\ref{tab:e3_frames} y la Figura~\ref{fig:e3_frames} presentan los resul
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\textwidth]{figures/experiments/e3_vs_greedy_07_frames_normalizado.png}
-    \caption{Frames procesados normalizados por configuración. Valor normalizado mayor indica mayor throughput del pipeline de visión. Predictiva supera a Greedy en 5 de las 10 configuraciones.}
+    \caption{Frames procesados normalizados por configuración. Valor normalizado mayor indica mayor throughput del pipeline de visión. Predictiva supera a Greedy en 5 de las 10 configuraciones.}%
     \label{fig:e3_frames}
 \end{figure}
 
 En frames procesados la estrategia Predictiva supera a Greedy en \textbf{5 de las 10} configuraciones. Las ventajas más marcadas se observan en house-0 ($+186\%$) y en office-20 ($+508\%$). En los casos con densidad intermedia de actores (house-5, office-5, house-10, house-15, office-15) Greedy procesa más frames, lo que es coherente con su menor tiempo de cómputo por decisión.
 
 \subsection{Puntuación compuesta y análisis global}
-\label{sec:exp_e3_score}
 
 La Figura~\ref{fig:e3_score_config} presenta la puntuación compuesta calculada con la Ecuación~(\ref{eq:score}) para cada configuración, y la Figura~\ref{fig:e3_victorias} resume el recuento de victorias por métrica.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\textwidth]{figures/experiments/e3_vs_greedy_01_score_por_config.png}
-    \caption{Puntuación compuesta por configuración (Predictiva vs Greedy). Pesos: celdas fantasma 40\%, entropía 35\%, frames 25\%. Predictiva supera a Greedy en 7 de las 10 configuraciones.}
+    \caption{Puntuación compuesta por configuración (Predictiva vs Greedy). Pesos: celdas fantasma 40\%, entropía 35\%, frames 25\%. Predictiva supera a Greedy en 7 de las 10 configuraciones.}%
     \label{fig:e3_score_config}
 \end{figure}
 
@@ -183,16 +178,14 @@ La Figura~\ref{fig:e3_score_config} presenta la puntuación compuesta calculada 
         \centering
         \includegraphics[width=\textwidth]{figures/experiments/e3_vs_greedy_03_victorias_por_metrica.png}
         \caption{Victorias por métrica individual.}
-        \label{fig:e3_victorias_metrica}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.40\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/experiments/e3_vs_greedy_04_torta_victorias_score.png}
         \caption{Victorias por puntuación compuesta.}
-        \label{fig:e3_victorias_score}
     \end{subfigure}
-    \caption{Resumen de victorias de la estrategia Predictiva frente a Greedy. Predictiva gana en 7/10 configuraciones por puntuación compuesta.}
+    \caption{Resumen de victorias de la estrategia Predictiva frente a Greedy. Predictiva gana en 7/10 configuraciones por puntuación compuesta.}%
     \label{fig:e3_victorias}
 \end{figure}
 
@@ -201,7 +194,6 @@ Por puntuación compuesta, la estrategia Predictiva es la ganadora en \textbf{7 
 Aplicando el criterio de cuasi-empate ($S_{\text{Pred}} \geq 0{,}9 \cdot S_{\text{Greedy}}$), la estrategia Predictiva resulta competitiva o mejor en \textbf{7 de las 10} configuraciones. Este resultado indica que Predictiva no solo supera a la línea de base en la mayoría de los casos, sino que incluso en las configuraciones que no gana, la diferencia en puntuación compuesta es reducida en la mayor parte de ellas.
 
 \subsection{Análisis por entorno}
-\label{sec:exp_e3_entorno}
 
 \textbf{Entorno house.} En celdas fantasma, Predictiva supera a Greedy en todas las configuraciones con actores (5, 10, 15 y 20) y únicamente pierde en el caso sin actores. En entropía, Predictiva supera a Greedy solo en house-15; en los demás casos Greedy explora más del mapa. En frames procesados, Predictiva supera a Greedy en house-0 y house-20. La puntuación compuesta es favorable a Predictiva en cuatro de las cinco configuraciones de house (TC023, TC025, TC027, TC029).
 
@@ -209,7 +201,7 @@ Aplicando el criterio de cuasi-empate ($S_{\text{Pred}} \geq 0{,}9 \cdot S_{\tex
 
 En conjunto, los resultados revelan que el beneficio de la estrategia Predictiva se incrementa con la densidad de actores en ambos entornos. La ventaja en precisión de mapa (celdas fantasma) es robusta a partir de densidades de 5 actores en house y 10 actores en office. La ventaja en exploración (entropía) es menos frecuente, lo que se discute en la sección siguiente.
 
-\subsection{Análisis del costo computacional}
+\subsection{Análisis del costo computacional}%
 \label{sec:exp_e3_costo}
 
 La desventaja de la estrategia Predictiva en exploración (entropía del mapa) en los experimentos de 30 minutos motivó el planteamiento de la \textbf{hipótesis del costo computacional}: la menor exploración de Predictiva puede deberse en parte a la demora en el cálculo de la utilidad dinámica, que involucra la planificación de la ruta completa hacia cada frontera candidata, el cómputo del tiempo de viaje a cada punto de la ruta y la predicción de posiciones futuras de cada persona detectada. Esta demora reduce el tiempo efectivo de movimiento del robot por ciclo de decisión.
@@ -226,14 +218,14 @@ La Figura~\ref{fig:e3_costo_evolucion} muestra la evolución temporal de la entr
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.90\textwidth]{figures/experiments/cost_hypothesis_01_evolution_time.png}
-    \caption{Evolución temporal de la entropía del mapa y los frames procesados en los experimentos extendidos (VH001 y VH002, $\approx 3$ h). Se observa una ventana de crecimiento acelerado entre los 25--70 min en house y entre los 47 min y 2 h en office, seguida de una fase de mejora leve.}
+    \caption{Evolución temporal de la entropía del mapa y los frames procesados en los experimentos extendidos (VH001 y VH002, $\approx 3$ h). Se observa una ventana de crecimiento acelerado entre los 25--70 min en house y entre los 47 min y 2 h en office, seguida de una fase de mejora leve.}%
     \label{fig:e3_costo_evolucion}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\textwidth]{figures/experiments/cost_hypothesis_02_comparison_30min_vs_3h.png}
-    \caption{Comparación de métricas finales entre los experimentos de validación (30 min) y los experimentos extendidos ($\approx 3$ h) para las configuraciones house-20 y office-20. Se incluyen los valores de Greedy a 30 min como referencia.}
+    \caption{Comparación de métricas finales entre los experimentos de validación (30 min) y los experimentos extendidos ($\approx 3$ h) para las configuraciones house-20 y office-20. Se incluyen los valores de Greedy a 30 min como referencia.}%
     \label{fig:e3_costo_comparacion}
 \end{figure}
 
@@ -247,7 +239,6 @@ Los resultados de los experimentos extendidos se resumen a continuación:
 Estos resultados apoyan la hipótesis: dado tiempo suficiente, la estrategia Predictiva recupera y supera la exploración de Greedy en ambos entornos. La ventana de crecimiento acelerado es distinta en cada entorno (25--70 min en house; 47 min--2 h en office), lo que sugiere que la dificultad de recuperación depende de la geometría del entorno y la complejidad de las rutas calculadas. Para que Predictiva exprese su potencial de exploración junto con su ventaja en precisión, se recomienda asignar al menos 1--2 horas de ejecución.
 
 \subsection{Discusión}
-\label{sec:exp_e3_discusion}
 
 Los resultados permiten identificar tres aspectos centrales del comportamiento de la estrategia Predictiva:
 

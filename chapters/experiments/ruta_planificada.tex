@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Ruta Planificada: utilidad dinámica por trayecto de acceso}
+\section{Ruta Planificada: utilidad dinámica por trayecto de acceso}%
 \label{sec:exp_e2}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -7,19 +7,17 @@ La estrategia \textbf{Ruta Planificada} extiende el costo dinámico de la estrat
 
 \begin{equation}
     D_{\text{Ruta}}(v) = \bigl|\{ p_i : \exists\, q \in \mathcal{P}(v) \text{ tal que } \|q - p_i\|_2 \leq r \}\bigr|
-    \label{eq:d2}
 \end{equation}
 
 \noindent Esta formulación aborda la limitación estructural de la estrategia Frontera: el robot puede ahora descartar fronteras cuyo trayecto de acceso atraviesa zonas concurridas, aunque el destino en sí esté libre de personas. El costo computacional es mayor que en Frontera ya que requiere evaluar múltiples puntos de la ruta planificada para cada frontera candidata.
 
 \subsection{Diseño de los experimentos}
-\label{sec:exp_e2_diseno}
 
 Los experimentos de validación comprenden \textbf{10 casos de prueba} (TC011–TC020) con las mismas configuraciones de entorno y densidad de actores que el resto de las etapas de validación, detallados en la Tabla~\ref{tab:casos_ruta}. Cada caso se ejecutó con \textbf{tres réplicas independientes} (V031–V060); el valor representativo de Ruta Planificada es la mediana de las tres réplicas. La línea de base Greedy corresponde a los experimentos G001–G010.
 
 \begin{table}[htbp]
     \centering
-    \caption{Casos de prueba de validación: estrategia Ruta Planificada y Greedy.}
+    \caption{Casos de prueba de validación: estrategia Ruta Planificada y Greedy.}%
     \label{tab:casos_ruta}
     \begin{tabular}{cccrr}
         \toprule
@@ -43,7 +41,7 @@ La normalización global min-máx se calculó sobre la unión de valores de Ruta
 
 \begin{table}[htbp]
     \centering
-    \caption{Rangos globales de normalización para la comparación Ruta Planificada vs Greedy.}
+    \caption{Rangos globales de normalización para la comparación Ruta Planificada vs Greedy.}%
     \label{tab:rangos_globales_e2}
     \begin{tabular}{lrr}
         \toprule
@@ -57,13 +55,12 @@ La normalización global min-máx se calculó sobre la unión de valores de Ruta
 \end{table}
 
 \subsection{Resultados por métrica}
-\label{sec:exp_e2_metricas}
 
 La Tabla~\ref{tab:e2_ghost} y la Figura~\ref{fig:e2_ghost} presentan los resultados de celdas fantasma por configuración.
 
 \begin{table}[htbp]
     \centering
-    \caption{Celdas fantasma (valor final) por configuración: Ruta Planificada vs Greedy. Valores en negrita indican la estrategia ganadora. Menor es mejor.}
+    \caption{Celdas fantasma (valor final) por configuración: Ruta Planificada vs Greedy. Valores en negrita indican la estrategia ganadora. Menor es mejor.}%
     \label{tab:e2_ghost}
     \begin{tabular}{lrrr}
         \toprule
@@ -86,7 +83,7 @@ La Tabla~\ref{tab:e2_ghost} y la Figura~\ref{fig:e2_ghost} presentan los resulta
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/ruta_planificada/e2_vs_greedy_04_ghost_normalizado.png}
-    \caption{Celdas fantasma normalizadas por configuración. Valor normalizado mayor indica menor número de celdas fantasma (mejor precisión del mapa). Ruta Planificada supera a Greedy en 5 de las 10 configuraciones.}
+    \caption{Celdas fantasma normalizadas por configuración. Valor normalizado mayor indica menor número de celdas fantasma (mejor precisión del mapa). Ruta Planificada supera a Greedy en 5 de las 10 configuraciones.}%
     \label{fig:e2_ghost}
 \end{figure}
 
@@ -96,7 +93,7 @@ La Tabla~\ref{tab:e2_entropy} y la Figura~\ref{fig:e2_entropy} presentan los res
 
 \begin{table}[htbp]
     \centering
-    \caption{Entropía del mapa (valor final) por configuración: Ruta Planificada vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}
+    \caption{Entropía del mapa (valor final) por configuración: Ruta Planificada vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}%
     \label{tab:e2_entropy}
     \begin{tabular}{lrrr}
         \toprule
@@ -119,7 +116,7 @@ La Tabla~\ref{tab:e2_entropy} y la Figura~\ref{fig:e2_entropy} presentan los res
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/ruta_planificada/e2_vs_greedy_05_entropy_normalizado.png}
-    \caption{Entropía del mapa normalizada por configuración. Valor normalizado mayor indica mayor exploración. Ruta Planificada supera a Greedy en 4 de las 10 configuraciones.}
+    \caption{Entropía del mapa normalizada por configuración. Valor normalizado mayor indica mayor exploración. Ruta Planificada supera a Greedy en 4 de las 10 configuraciones.}%
     \label{fig:e2_entropy}
 \end{figure}
 
@@ -129,7 +126,7 @@ La Tabla~\ref{tab:e2_frames} y la Figura~\ref{fig:e2_frames} presentan los resul
 
 \begin{table}[htbp]
     \centering
-    \caption{Frames totales procesados (valor final acumulado) por configuración: Ruta Planificada vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}
+    \caption{Frames totales procesados (valor final acumulado) por configuración: Ruta Planificada vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}%
     \label{tab:e2_frames}
     \begin{tabular}{lrrr}
         \toprule
@@ -152,21 +149,20 @@ La Tabla~\ref{tab:e2_frames} y la Figura~\ref{fig:e2_frames} presentan los resul
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/ruta_planificada/e2_vs_greedy_06_frames_normalizado.png}
-    \caption{Frames procesados normalizados por configuración. Valor normalizado mayor indica mayor throughput del pipeline de visión. Ruta Planificada supera a Greedy en 3 de las 10 configuraciones.}
+    \caption{Frames procesados normalizados por configuración. Valor normalizado mayor indica mayor throughput del pipeline de visión. Ruta Planificada supera a Greedy en 3 de las 10 configuraciones.}%
     \label{fig:e2_frames}
 \end{figure}
 
 En frames procesados Ruta Planificada supera a Greedy en \textbf{3 de las 10} configuraciones, con las victorias más pronunciadas en house-0 ($+122\%$) y office-20 ($+482\%$). En las siete configuraciones restantes Greedy procesa más frames, con diferencias que oscilan entre el $-4\%$ (office-0) y el $-43\%$ (house-15). El patrón de victorias en los extremos de densidad (0 y 20 actores) es consistente con el observado en la estrategia Frontera, aunque con magnitudes superiores.
 
 \subsection{Puntuación compuesta y análisis global}
-\label{sec:exp_e2_score}
 
 Las Figuras~\ref{fig:e2_score_config} y~\ref{fig:e2_victorias} resumen los resultados por puntuación compuesta.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/ruta_planificada/e2_vs_greedy_01_score_por_config.png}
-    \caption{Puntuación compuesta por configuración (Ruta Planificada vs Greedy). Pesos: celdas fantasma 40\%, entropía 35\%, frames 25\%. Ruta Planificada supera a Greedy en 5 de las 10 configuraciones.}
+    \caption{Puntuación compuesta por configuración (Ruta Planificada vs Greedy). Pesos: celdas fantasma 40\%, entropía 35\%, frames 25\%. Ruta Planificada supera a Greedy en 5 de las 10 configuraciones.}%
     \label{fig:e2_score_config}
 \end{figure}
 
@@ -176,23 +172,20 @@ Las Figuras~\ref{fig:e2_score_config} y~\ref{fig:e2_victorias} resumen los resul
         \centering
         \includegraphics[width=\textwidth]{figures/experiments/ruta_planificada/e2_vs_greedy_02_victorias_por_metrica.png}
         \caption{Victorias por métrica individual.}
-        \label{fig:e2_victorias_metrica}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.36\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/experiments/ruta_planificada/e2_vs_greedy_03_torta_victorias_score.png}
         \caption{Victorias por puntuación compuesta.}
-        \label{fig:e2_victorias_score}
     \end{subfigure}
-    \caption{Resumen de victorias de Ruta Planificada frente a Greedy.}
+    \caption{Resumen de victorias de Ruta Planificada frente a Greedy.}%
     \label{fig:e2_victorias}
 \end{figure}
 
 Por puntuación compuesta, Ruta Planificada gana en \textbf{5 de las 10} configuraciones: TC011 (house-0), TC015 (house-10), TC016 (office-10), TC019 (house-20) y TC020 (office-20). Aplicando el criterio de cuasi-empate ($S_{\text{Ruta}} \geq 0{,}9 \cdot S_{\text{Greedy}}$), la estrategia es competitiva o mejor en \textbf{6 de las 10} configuraciones.
 
 \subsection{Análisis por entorno}
-\label{sec:exp_e2_entorno}
 
 \textbf{Entorno house.} En celdas fantasma, Ruta Planificada supera a Greedy en house-5 y house-20; pierde en house-0, house-10 y house-15. En entropía, gana en house-0, house-10 y house-15; pierde en house-5 y house-20. En frames, supera a Greedy solo en house-0 y house-20. La puntuación compuesta favorece a Ruta Planificada en house-0, house-10 y house-20 (TC011, TC015, TC019).
 
@@ -200,7 +193,7 @@ Por puntuación compuesta, Ruta Planificada gana en \textbf{5 de las 10} configu
 
 El entorno office muestra un comportamiento más desigual que house: Ruta Planificada obtiene la victoria más contundente en frames (office-20, $+482\%$) pero también registra su peor resultado en ghost cells (office-15, 220 celdas).
 
-\subsection{Discusión}
+\subsection{Discusión}%
 \label{sec:exp_e2_discusion}
 
 Los resultados de la estrategia Ruta Planificada revelan una relación no monotónica entre la sofisticación del modelo de costo dinámico y el rendimiento observado. Tres hallazgos centrales estructuran la discusión:

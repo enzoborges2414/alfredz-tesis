@@ -4,11 +4,9 @@ Los experimentos se organizaron en tres etapas: una etapa de calibración para d
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Configuración experimental}
-\label{sec:exp_config}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Entornos de simulación}
-\label{sec:exp_entornos}
 
 Los experimentos se ejecutaron en simulación mediante Gazebo con dos entornos de interior de diferente distribución espacial:
 
@@ -22,7 +20,6 @@ En cada entorno se ejecutaron experimentos con cinco niveles de densidad de acto
 Todos los experimentos tuvieron una duración de \textbf{1800 segundos} (30 minutos). AlfredZ contó con los mismos parámetros de navegación, percepción y mapa en todas las ejecuciones, con la única variación en la estrategia de planificación NBV\@.
 
 \subsection{Configuración del sistema}
-\label{sec:exp_sistema}
 
 El sistema AlfredZ integra los siguientes componentes en cada experimento:
 
@@ -43,7 +40,6 @@ La función de utilidad empleada por las estrategias dinámicas sigue la forma g
 \noindent donde $IG_{\text{estático}}(v)$ representa la ganancia de información estática de la frontera $v$, $D(v)$ es el costo dinámico calculado según la estrategia activa, $C_{\text{trayecto}}(v)$ es el costo de la ruta planificada hacia $v$, y $\lambda$ y $\mu$ son hiperparámetros que ponderan cada componente. Los valores óptimos $\lambda = 5$ y $\mu = 0{,}01$ se determinaron en la etapa de calibración descrita en la Sección~\ref{sec:exp_calibracion}.
 
 \subsection{Métricas de evaluación}
-\label{sec:exp_metricas}
 
 El desempeño de cada estrategia se evaluó mediante tres métricas registradas al final de cada experimento:
 
@@ -53,20 +49,20 @@ El desempeño de cada estrategia se evaluó mediante tres métricas registradas 
     \item \textbf{Frames totales procesados (\textit{total frames processed})}: contador acumulativo del número de observaciones de cámara procesadas por el \textit{pipeline} de visión durante toda la ejecución del experimento. Se utiliza como indicador de eficiencia y throughput del sistema perceptivo. Un valor \textbf{mayor} indica mayor cantidad de observaciones procesadas.
 \end{itemize}
 
-\subsection{Puntuación compuesta}
+\subsection{Puntuación compuesta}%
 \label{sec:exp_score}
 
 Para facilitar la comparación global entre estrategias se empleó una puntuación compuesta que agrega las tres métricas en un único valor escalar. Previamente, cada métrica se normalizó mediante normalización min-máx global sobre el conjunto de valores de ambas estrategias comparadas:
 
 \begin{equation}
-    \hat{x} = \frac{x - x_{\min}}{x_{\max} - x_{\min}}
+    \hat{x} = \frac{x - x_{\min}}{x_{\max} - x_{\min}}%
     \label{eq:norm}
 \end{equation}
 
 \noindent Dado que en celdas fantasma un valor menor corresponde a mejor desempeño, se invierte la normalización de esta métrica ($1 - \hat{x}_{\text{ghost}}$). La puntuación compuesta se calcula entonces como:
 
 \begin{equation}
-    S = 0{,}40 \cdot (1 - \hat{x}_{\text{ghost}}) + 0{,}35 \cdot \hat{x}_{\text{entropy}} + 0{,}25 \cdot \hat{x}_{\text{frames}}
+    S = 0{,}40 \cdot (1 - \hat{x}_{\text{ghost}}) + 0{,}35 \cdot \hat{x}_{\text{entropy}} + 0{,}25 \cdot \hat{x}_{\text{frames}}%
     \label{eq:score}
 \end{equation}
 
@@ -76,14 +72,12 @@ La estrategia con mayor puntuación compuesta en una configuración dada se cons
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Estrategia de comparación: Greedy}
-\label{sec:exp_greedy}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 La estrategia Greedy actúa como línea de base de referencia. En cada ciclo de decisión, selecciona la frontera inexplorada más cercana al robot según distancia euclídea, sin considerar factores dinámicos ni calcular rutas completas. Su función de selección se reduce a:
 
 \begin{equation}
     v^* = \arg\min_{v \in \mathcal{F}} \| p_{\text{robot}} - c_v \|_2
-    \label{eq:greedy}
 \end{equation}
 
 \noindent donde $\mathcal{F}$ es el conjunto de fronteras disponibles y $c_v$ es el centroide de la frontera $v$.

@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Frontera: utilidad dinámica por centro de frontera}
+\section{Frontera: utilidad dinámica por centro de frontera}%
 \label{sec:exp_e1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -7,19 +7,17 @@ La estrategia \textbf{Frontera} calcula el costo dinámico $D(v)$ contando el n�
 
 \begin{equation}
     D_{\text{Front}}(v) = \bigl|\{ p_i : \| c_v - p_i \|_2 \leq r \}\bigr|
-    \label{eq:d1}
 \end{equation}
 
 \noindent La evaluación se realiza en el punto de \emph{destino}, sin considerar el camino que el robot debe recorrer para llegar. Esta simplicidad implica un costo computacional bajo pero también una limitación estructural: el robot puede seleccionar fronteras cuyo entorno inmediato está libre de personas, pero cuyo trayecto de acceso atraviesa zonas concurridas.
 
 \subsection{Diseño de los experimentos}
-\label{sec:exp_e1_diseno}
 
 Los experimentos de validación de la estrategia Frontera comprenden \textbf{10 casos de prueba} (TC001–TC010) con las mismas configuraciones de entorno y densidad de actores que el resto de las etapas de validación, detalladas en la Tabla~\ref{tab:casos_frontera}. Cada caso se ejecutó con \textbf{tres réplicas independientes} (V001–V030); el valor representativo de Frontera en cada configuración es la mediana de las tres réplicas. La línea de base Greedy corresponde a los experimentos G001–G010, ejecutados bajo las mismas condiciones ($\lambda = 5$, $\mu = 0{,}01$, duración 1800 s).
 
 \begin{table}[htbp]
     \centering
-    \caption{Casos de prueba de validación: estrategia Frontera y Greedy.}
+    \caption{Casos de prueba de validación: estrategia Frontera y Greedy.}%
     \label{tab:casos_frontera}
     \begin{tabular}{cccrr}
         \toprule
@@ -43,7 +41,7 @@ La normalización global min-máx se aplicó sobre la unión de valores de Front
 
 \begin{table}[htbp]
     \centering
-    \caption{Rangos globales de normalización para la comparación Frontera vs Greedy.}
+    \caption{Rangos globales de normalización para la comparación Frontera vs Greedy.}%
     \label{tab:rangos_globales_e1}
     \begin{tabular}{lrr}
         \toprule
@@ -59,13 +57,12 @@ La normalización global min-máx se aplicó sobre la unión de valores de Front
 \noindent El máximo de celdas fantasma (155) corresponde al experimento TC007 (house-15) de la propia estrategia Frontera, lo que constituye un resultado relevante que se discute en la Sección~\ref{sec:exp_e1_discusion}.
 
 \subsection{Resultados por métrica}
-\label{sec:exp_e1_metricas}
 
 La Tabla~\ref{tab:e1_ghost} y la Figura~\ref{fig:e1_ghost} presentan los resultados de celdas fantasma por configuración.
 
 \begin{table}[htbp]
     \centering
-    \caption{Celdas fantasma (valor final) por configuración: Frontera vs Greedy. Valores en negrita indican la estrategia ganadora. Menor es mejor.}
+    \caption{Celdas fantasma (valor final) por configuración: Frontera vs Greedy. Valores en negrita indican la estrategia ganadora. Menor es mejor.}%
     \label{tab:e1_ghost}
     \begin{tabular}{lrrr}
         \toprule
@@ -88,7 +85,7 @@ La Tabla~\ref{tab:e1_ghost} y la Figura~\ref{fig:e1_ghost} presentan los resulta
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/frontera/e1_vs_greedy_04_ghost_normalizado.png}
-    \caption{Celdas fantasma normalizadas por configuración. Valor normalizado mayor indica menor número de celdas fantasma (mejor precisión del mapa). Frontera supera a Greedy en 6 de las 10 configuraciones.}
+    \caption{Celdas fantasma normalizadas por configuración. Valor normalizado mayor indica menor número de celdas fantasma (mejor precisión del mapa). Frontera supera a Greedy en 6 de las 10 configuraciones.}%
     \label{fig:e1_ghost}
 \end{figure}
 
@@ -98,7 +95,7 @@ La Tabla~\ref{tab:e1_entropy} y la Figura~\ref{fig:e1_entropy} presentan los res
 
 \begin{table}[htbp]
     \centering
-    \caption{Entropía del mapa (valor final) por configuración: Frontera vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}
+    \caption{Entropía del mapa (valor final) por configuración: Frontera vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}%
     \label{tab:e1_entropy}
     \begin{tabular}{lrrr}
         \toprule
@@ -121,7 +118,7 @@ La Tabla~\ref{tab:e1_entropy} y la Figura~\ref{fig:e1_entropy} presentan los res
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/frontera/e1_vs_greedy_05_entropy_normalizado.png}
-    \caption{Entropía del mapa normalizada por configuración. Valor normalizado mayor indica mayor exploración. Frontera supera a Greedy en 5 de las 10 configuraciones.}
+    \caption{Entropía del mapa normalizada por configuración. Valor normalizado mayor indica mayor exploración. Frontera supera a Greedy en 5 de las 10 configuraciones.}%
     \label{fig:e1_entropy}
 \end{figure}
 
@@ -131,7 +128,7 @@ La Tabla~\ref{tab:e1_frames} y la Figura~\ref{fig:e1_frames} presentan los resul
 
 \begin{table}[htbp]
     \centering
-    \caption{Frames totales procesados (valor final acumulado) por configuración: Frontera vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}
+    \caption{Frames totales procesados (valor final acumulado) por configuración: Frontera vs Greedy. Valores en negrita indican la estrategia ganadora. Mayor es mejor.}%
     \label{tab:e1_frames}
     \begin{tabular}{lrrr}
         \toprule
@@ -154,21 +151,20 @@ La Tabla~\ref{tab:e1_frames} y la Figura~\ref{fig:e1_frames} presentan los resul
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/frontera/e1_vs_greedy_06_frames_normalizado.png}
-    \caption{Frames procesados normalizados por configuración. Valor normalizado mayor indica mayor throughput del pipeline de visión. Frontera supera a Greedy en 3 de las 10 configuraciones.}
+    \caption{Frames procesados normalizados por configuración. Valor normalizado mayor indica mayor throughput del pipeline de visión. Frontera supera a Greedy en 3 de las 10 configuraciones.}%
     \label{fig:e1_frames}
 \end{figure}
 
 En frames procesados Frontera supera a Greedy únicamente en \textbf{3 de las 10} configuraciones: house-0 ($+68\%$), house-20 ($+33\%$) y office-20 ($+287\%$). En las siete configuraciones restantes —todas de densidad baja a media— Greedy procesa significativamente más frames, con diferencias del $-14\%$ al $-40\%$. El patrón de victoria en los extremos de densidad (0 y 20 actores) se discute en la Sección~\ref{sec:exp_e1_discusion}.
 
 \subsection{Puntuación compuesta y análisis global}
-\label{sec:exp_e1_score}
 
 Las Figuras~\ref{fig:e1_score_config} y~\ref{fig:e1_victorias} resumen los resultados por puntuación compuesta.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/frontera/e1_vs_greedy_01_score_por_config.png}
-    \caption{Puntuación compuesta por configuración (Frontera vs Greedy). Pesos: celdas fantasma 40\%, entropía 35\%, frames 25\%. Frontera supera a Greedy en 5 de las 10 configuraciones.}
+    \caption{Puntuación compuesta por configuración (Frontera vs Greedy). Pesos: celdas fantasma 40\%, entropía 35\%, frames 25\%. Frontera supera a Greedy en 5 de las 10 configuraciones.}%
     \label{fig:e1_score_config}
 \end{figure}
 
@@ -178,16 +174,14 @@ Las Figuras~\ref{fig:e1_score_config} y~\ref{fig:e1_victorias} resumen los resul
         \centering
         \includegraphics[width=\textwidth]{figures/experiments/frontera/e1_vs_greedy_02_victorias_por_metrica.png}
         \caption{Victorias por métrica individual.}
-        \label{fig:e1_victorias_metrica}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.36\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/experiments/frontera/e1_vs_greedy_03_torta_victorias_score.png}
         \caption{Victorias por puntuación compuesta.}
-        \label{fig:e1_victorias_score}
     \end{subfigure}
-    \caption{Resumen de victorias de la estrategia Frontera frente a Greedy.}
+    \caption{Resumen de victorias de la estrategia Frontera frente a Greedy.}%
     \label{fig:e1_victorias}
 \end{figure}
 
@@ -196,7 +190,6 @@ Por puntuación compuesta, la estrategia Frontera es ganadora en \textbf{5 de la
 Aplicando el criterio de cuasi-empate ($S_{\text{Front}} \geq 0{,}9 \cdot S_{\text{Greedy}}$), Frontera resulta competitiva o mejor en \textbf{7 de las 10} configuraciones, lo que indica que incluso en los casos en que Greedy supera a Frontera, la diferencia en puntuación compuesta es reducida en la mayoría de ellos.
 
 \subsection{Análisis por entorno}
-\label{sec:exp_e1_entorno}
 
 \textbf{Entorno house.} En celdas fantasma, Frontera supera a Greedy en house-5, house-10 y house-20, pierde en house-0 por un margen mínimo (16 vs 15) y registra su peor caso en house-15 (155 vs 118). En entropía, Frontera gana en house-0, house-10 y house-15, y pierde en house-5 y house-20. En frames, solo supera a Greedy en house-0 y house-20. La puntuación compuesta favorece a Frontera en TC001, TC005 y TC009 (house-0, house-10 y house-20).
 
@@ -204,7 +197,7 @@ Aplicando el criterio de cuasi-empate ($S_{\text{Front}} \geq 0{,}9 \cdot S_{\te
 
 En conjunto, el beneficio de la estrategia Frontera aumenta con la densidad de actores en ambos entornos, con la excepción de house-15 que constituye un caso anómalo. Las configuraciones con 20 actores muestran las ventajas más consistentes tanto en ghost cells como en frames procesados.
 
-\subsection{Discusión}
+\subsection{Discusión}%
 \label{sec:exp_e1_discusion}
 
 Los resultados permiten identificar tres aspectos centrales del comportamiento de la estrategia Frontera:

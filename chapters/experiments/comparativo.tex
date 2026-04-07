@@ -1,18 +1,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Análisis comparativo de estrategias}
-\label{sec:exp_comparativo}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-En esta sección se presenta una comparación directa de las tres estrategias propuestas —Frontera, Ruta Planificada y Predictiva— entre sí y frente a la línea de base Greedy, sobre las mismas 10 configuraciones (entorno $\times$ número de actores). El análisis se organiza en tres bloques: resultados desagregados por métrica, puntuación compuesta global y análisis de trade-offs con recomendaciones de uso.
+En esta sección se presenta una comparación directa de las tres estrategias propuestas —Frontera (Sección~\ref{sec:exp_e1}), Ruta Planificada (Sección~\ref{sec:exp_e2}) y Predictiva (Sección~\ref{sec:exp_e3})— entre sí y frente a la línea de base Greedy, sobre las mismas 10 configuraciones (entorno $\times$ número de actores). El análisis se organiza en tres bloques: resultados desagregados por métrica, puntuación compuesta global y análisis de trade-offs con recomendaciones de uso.
 
 \subsection{Resultados comparativos por métrica}
-\label{sec:exp_comp_metricas}
 
 Las Tablas~\ref{tab:comp_ghost},~\ref{tab:comp_entropy} y~\ref{tab:comp_frames} presentan los valores finales de cada métrica para las cuatro estrategias. En cada fila se resalta en negrita el mejor valor por configuración. Para celdas fantasma el mejor valor es el menor; para entropía y frames, el mayor.
 
 \begin{table}[htbp]
     \centering
-    \caption{Celdas fantasma (valor final, menor es mejor) por configuración y estrategia. En negrita, el mejor valor de cada fila.}
+    \caption{Celdas fantasma (valor final, menor es mejor) por configuración y estrategia. En negrita, el mejor valor de cada fila.}%
     \label{tab:comp_ghost}
     \begin{tabular}{lrrrr}
         \toprule
@@ -36,7 +34,7 @@ En la Tabla~\ref{tab:comp_ghost} se observa que la estrategia Predictiva obtiene
 
 \begin{table}[htbp]
     \centering
-    \caption{Entropía del mapa (valor final $\times 10^{-4}$, mayor es mejor) por configuración y estrategia. En negrita, el mejor valor de cada fila.}
+    \caption{Entropía del mapa (valor final $\times 10^{-4}$, mayor es mejor) por configuración y estrategia. En negrita, el mejor valor de cada fila.}%
     \label{tab:comp_entropy}
     \begin{tabular}{lrrrr}
         \toprule
@@ -60,7 +58,7 @@ La Tabla~\ref{tab:comp_entropy} revela que la estrategia Frontera es la que más
 
 \begin{table}[htbp]
     \centering
-    \caption{Frames totales procesados (valor final acumulado, mayor es mejor) por configuración y estrategia. En negrita, el mejor valor de cada fila.}
+    \caption{Frames totales procesados (valor final acumulado, mayor es mejor) por configuración y estrategia. En negrita, el mejor valor de cada fila.}%
     \label{tab:comp_frames}
     \begin{tabular}{lrrrr}
         \toprule
@@ -83,21 +81,20 @@ La Tabla~\ref{tab:comp_entropy} revela que la estrategia Frontera es la que más
 En la Tabla~\ref{tab:comp_frames} se observa que la estrategia Predictiva procesa más frames en \textbf{5 de las 10} configuraciones, siendo la de mayor throughput en 0 actores (ambos entornos) y en office-10 y office-20. Greedy domina en densidades de 5 y 15 actores, donde las estrategias propuestas penalizan la selección de fronteras y reducen la frecuencia de desplazamiento. Las tres estrategias propuestas superan ampliamente a Greedy en las configuraciones de 20 actores, donde Greedy sufre interrupciones frecuentes por congestión.
 
 \subsection{Puntuación compuesta}
-\label{sec:exp_comp_score}
 
 La Figura~\ref{fig:comp_score_config} presenta la puntuación compuesta de las cuatro estrategias en cada configuración, calculada con los pesos establecidos en la Sección~\ref{sec:exp_calibracion}: 40\% celdas fantasma, 35\% entropía del mapa y 25\% frames procesados, sobre normalización global min-máx aplicada a la unión de los valores de las cuatro estrategias.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/comparativo/validation_comparison_01_score_por_config.png}
-    \caption{Puntuación compuesta de las cuatro estrategias por configuración. Se muestra en qué configuraciones cada estrategia propuesta supera a Greedy.}
+    \caption{Puntuación compuesta de las cuatro estrategias por configuración. Se muestra en qué configuraciones cada estrategia propuesta supera a Greedy.}%
     \label{fig:comp_score_config}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/experiments/comparativo/validation_comparison_04_lineas_score.png}
-    \caption{Evolución de la puntuación compuesta por configuración (representación en líneas). Permite identificar el comportamiento relativo de las estrategias a lo largo del gradiente de densidad de actores.}
+    \caption{Evolución de la puntuación compuesta por configuración (representación en líneas). Permite identificar el comportamiento relativo de las estrategias a lo largo del gradiente de densidad de actores.}%
     \label{fig:comp_score_lineas}
 \end{figure}
 
@@ -108,18 +105,17 @@ En las Figuras~\ref{fig:comp_score_config} y~\ref{fig:comp_score_lineas} se apre
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/experiments/comparativo/validation_comparison_02_victorias_por_estrategia.png}
-        \caption{Victorias por estrategia (vs Greedy, score compuesto).}
+        \caption{Victorias por estrategia (vs Greedy, score compuesto).}%
         \label{fig:comp_victorias_estrategia}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/experiments/comparativo/validation_comparison_03_victorias_por_metrica.png}
-        \caption{Victorias por métrica individual (vs Greedy).}
+        \caption{Victorias por métrica individual (vs Greedy).}%
         \label{fig:comp_victorias_metrica}
     \end{subfigure}
     \caption{Recuento de victorias de cada estrategia propuesta frente a Greedy, por score compuesto y por métrica individual.}
-    \label{fig:comp_victorias}
 \end{figure}
 
 La Figura~\ref{fig:comp_victorias_metrica} pone de manifiesto los perfiles diferenciados de cada estrategia:
@@ -133,7 +129,7 @@ La Tabla~\ref{tab:comp_mejor_por_config} sintetiza, para cada configuración, qu
 
 \begin{table}[htbp]
     \centering
-    \caption{Estrategia con mayor puntuación compuesta entre Frontera, Ruta Planificada y Predictiva, por configuración. Se indica si esa estrategia además supera a Greedy.}
+    \caption{Estrategia con mayor puntuación compuesta entre Frontera, Ruta Planificada y Predictiva, por configuración. Se indica si esa estrategia además supera a Greedy.}%
     \label{tab:comp_mejor_por_config}
     \begin{tabular}{lccc}
         \toprule
@@ -156,7 +152,6 @@ La Tabla~\ref{tab:comp_mejor_por_config} sintetiza, para cada configuración, qu
 Se observa que ninguna estrategia domina en todas las configuraciones: Predictiva lidera en 5 de 10, Frontera en 2 de 10 y Ruta Planificada en 3 de 10. Las únicas dos configuraciones en que ninguna de las tres estrategias supera a Greedy son office-0 y office-5, ambas con baja densidad de actores en el entorno más grande, donde la exploración sin restricciones dinámicas resulta más eficiente.
 
 \subsection{Trade-offs y recomendaciones de uso}
-\label{sec:exp_comp_tradeoffs}
 
 Los resultados permiten identificar tres trade-offs estructurales que caracterizan el comportamiento del sistema:
 
@@ -170,7 +165,7 @@ Sobre la base de estos trade-offs, se presenta la Tabla~\ref{tab:comp_recomendac
 
 \begin{table}[htbp]
     \centering
-    \caption{Recomendaciones de selección de estrategia según el objetivo de optimización.}
+    \caption{Recomendaciones de selección de estrategia según el objetivo de optimización.}%
     \label{tab:comp_recomendaciones}
     \begin{tabular}{lp{7cm}}
         \toprule
@@ -187,7 +182,6 @@ Sobre la base de estos trade-offs, se presenta la Tabla~\ref{tab:comp_recomendac
 \end{table}
 
 \subsection{Conclusión del capítulo}
-\label{sec:exp_conclusion}
 
 En este capítulo se evaluaron tres estrategias de planificación de próxima vista para el sistema AlfredZ bajo distintas condiciones de densidad de actores dinámicos, comparándolas frente a la línea de base Greedy en los entornos house y office.
 
