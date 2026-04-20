@@ -1,13 +1,174 @@
-Revisión de antecedentes (ya sea productos, procesos, publicaciones, etc., a nivel académico o comercial) en el tema del trabajo. Puede incluir además (si es necesario) una breve introducción a los conceptos necesarios para entender el trabajo.
+En este capítulo se presentan los trabajos relacionados más relevantes para
+el proyecto alfredZ. Los trabajos seleccionados abordan dos ejes temáticos
+complementarios: por un lado, el estado del arte en mapeo y localización
+activa (Active SLAM) considerando entornos estáticos; por otro, los enfoques
+propuestos para navegación y mapeo en presencia de agentes dinámicos. Para
+cada trabajo se describen la solución propuesta, la metodología de evaluación
+y los resultados obtenidos, con especial atención a las limitaciones
+identificadas. Estas limitaciones constituyen la motivación directa de las
+estrategias implementadas en alfredZ.
 
-\section{Primera Sección}
+\section{Active SLAM: estado del arte y desafíos abiertos}% chktex 13
 
-Los capítulos pueden incluir secciones como esta, que además pueden hacer referencia a otras secciones, como por ejemplo a la Sección~\ref{sec:segunda}.
+En 2023, Placed et al.~\cite{placed2023survey} publicaron un relevamiento
+exhaustivo del estado del arte en Active SLAM en IEEE Transactions on
+Robotics. Los autores definen el Active SLAM como el problema de planificar
+y controlar el movimiento de un robot con el fin de construir el modelo más
+preciso y completo posible del entorno que lo rodea. A diferencia del SLAM
+pasivo ---que se limita a integrar observaciones conforme el robot se
+desplaza--- el Active SLAM incorpora la toma de decisiones sobre las
+acciones del robot: qué explorar, qué ruta seguir y cuándo detener la
+exploración.
 
-\section{Segunda Sección}\label{sec:segunda}
+El trabajo presenta una formulación unificada del problema, organizada en
+tres etapas modulares: (i) identificación de posibles acciones o metas de
+navegación, (ii) estimación de la utilidad esperada de cada acción, y (iii)
+ejecución de la acción más conveniente. Esta arquitectura modular constituye
+la base de la mayoría de los enfoques actuales, incluyendo métodos basados
+en entropía de información, planificación en espacio de creencias
+(\textit{belief-space planning}) y aprendizaje por refuerzo profundo.
 
-Esta sección además tiene una subsección.
+\subsection{Limitaciones y conexión con alfredZ}
 
-\subsection{La Subsección}
+El survey identifica como uno de los desafíos abiertos más relevantes el
+manejo de \textbf{entornos dinámicos}. La gran mayoría de los sistemas de
+Active SLAM descritos en la literatura asumen que el entorno es estático:
+los elementos que no son el robot permanecen en su lugar durante toda la
+exploración. Esta suposición simplifica considerablemente el problema, pero
+resulta inadecuada en escenarios reales donde personas u otros agentes se
+desplazan durante la tarea de mapeo. Los autores señalan que la
+investigación en Active SLAM en entornos dinámicos se ha limitado en su
+mayoría a la etapa de re-planificación reactiva, sin incorporar los agentes
+dinámicos de manera integral en la función de utilidad ni en la
+representación del mapa.
 
-Esta es la subsección.
+Otra limitación señalada por los autores es la \textbf{falta de benchmarks
+estandarizados} que permitan comparar objetivamente los distintos enfoques.
+La mayoría de los trabajos validan sus propuestas en escenarios específicos
+que no son reproducibles por otros grupos. El trabajo hace un llamado
+explícito a desarrollar métricas más allá de las comúnmente utilizadas
+(tiempo de exploración y cobertura del mapa), señalando que la calidad de
+las estimaciones debería ser el objetivo central a medir.
+
+Estas limitaciones son directamente relevantes para el proyecto alfredZ. La
+suposición de entorno estático, omnipresente en los sistemas de Active SLAM,
+produce mapas contaminados en escenarios con peatones: celdas que
+momentáneamente estuvieron ocupadas por personas en movimiento quedan
+marcadas como obstáculos permanentes. El proyecto alfredZ aborda esta
+problemática incorporando detección semántica de objetos dinámicos
+mediante YOLOv8, lo
+que permite identificar y filtrar estas falsas ocupaciones ---denominadas
+\textit{ghost cells} en este trabajo--- antes de que corrompan el mapa
+estático. Asimismo, alfredZ propone métricas específicas para entornos
+dinámicos, como la cantidad de \textit{ghost cells} y la entropía del mapa,
+respondiendo a la necesidad de evaluación objetiva señalada por Placed
+et al.
+
+\section{Exploración basada en fronteras}
+
+Topiwala e Inani~\cite{topiwala2018frontier}, del Maryland Robotics Center
+(Universidad de Maryland), describieron e implementaron el algoritmo
+Wavefront Frontier Detector (WFD) para la exploración autónoma de entornos
+desconocidos. El objetivo del trabajo es demostrar que un robot puede
+explorar de manera autónoma tanto espacios abiertos de gran extensión como
+espacios pequeños y recargados de obstáculos, generando un mapa de mayor
+precisión que el producido mediante teleoperación manual.
+
+El algoritmo WFD se fundamenta en el concepto de \textit{frontera}: las
+regiones del mapa de ocupación que se encuentran en el límite entre el
+espacio ya explorado y el espacio aún desconocido. El robot se desplaza
+iterativamente hacia la frontera más cercana a su posición actual, realiza
+un barrido de 360° al llegar para actualizar el mapa y repite el proceso
+hasta que no quedan más fronteras por explorar. La principal ventaja del
+WFD sobre el método original de Yamauchi es que solo escanea las regiones
+conocidas de la grilla de ocupación en cada iteración, reduciendo
+significativamente la complejidad temporal del algoritmo.
+
+El sistema fue implementado utilizando ROS (\textit{Robot Operating
+System}), el paquete \texttt{gmapping} para SLAM y \texttt{move\_base} para
+planificación de rutas. Las pruebas se realizaron en dos modalidades: en
+simulación, replicando el laboratorio de robótica de la Universidad de
+Maryland en Gazebo, y en hardware real, sobre una plataforma TurtleBot2
+Kobuki equipada con un sensor Astra. Los resultados mostraron que los mapas
+generados autónomamente son más precisos que los producidos mediante
+teleoperación, con trayectorias más suaves y menor tiempo y distancia total
+recorrida para cubrir el área de exploración.
+
+\subsection{Limitaciones y conexión con alfredZ}
+
+La solución propuesta presenta limitaciones importantes cuando se aplica a
+entornos con personas en movimiento. El algoritmo WFD asume implícitamente
+que el entorno es estático: las fronteras se detectan y priorizan en función
+de la geometría del mapa de ocupación, sin ningún mecanismo para distinguir
+si una celda fue ocupada por un obstáculo permanente o por un agente
+dinámico. En un entorno con peatones, personas que transitan brevemente por
+una zona son incorporadas al mapa como obstáculos estáticos, corrompiendo la
+representación del espacio libre. Asimismo, la selección de fronteras
+basada únicamente en distancia euclídea no considera la presencia de agentes
+dinámicos que podrían bloquear el camino hacia una frontera, ocasionando
+re-planificaciones frecuentes y movimientos ineficientes.
+
+La estrategia de Exploración por Frontera implementada en alfredZ (Estrategia
+E1 en este trabajo) toma como punto de partida el enfoque WFD y lo extiende
+con capas de procesamiento semántico. Las celdas que corresponden a
+detecciones de personas son identificadas como \textit{ghost cells} y
+excluidas del proceso de selección de fronteras, evitando que el mapa
+estático quede contaminado. Esto permite que la exploración por fronteras
+sea robusta ante la presencia de múltiples peatones, un escenario no
+contemplado en el trabajo original.
+
+\section{SLAM con detección y seguimiento de objetos en movimiento}
+
+Wang et al.~\cite{wang2007slammot} propusieron un marco teórico para
+abordar de manera conjunta el problema del SLAM y el seguimiento de objetos
+en movimiento, denominando esta formulación SLAMMOT (\textit{Simultaneous
+Localization, Mapping and Moving Object Tracking}). El trabajo,
+desarrollado por investigadores del Instituto de Robótica de Carnegie Mellon
+University, la Universidad de Stanford y la Universidad de Sydney, tiene
+como motivación principal la operación de vehículos autónomos en entornos
+urbanos concurridos, donde tanto la precisión del mapa estático como la
+detección de obstáculos dinámicos son críticas para la seguridad.
+
+Los autores presentan dos formulaciones del problema. La primera, SLAM con
+objetos generalizados, calcula una posterior conjunta sobre todos los objetos
+del entorno ---estáticos y en movimiento--- junto con la pose del robot. Si
+bien esta formulación es matemáticamente completa, los propios autores
+reconocen que es computacionalmente intractable para escenarios reales. La
+segunda formulación, SLAM con DATMO (\textit{Detection and Tracking of
+Moving Objects}), descompone el problema en dos estimadores separados: uno
+para los objetos estáticos (el mapa) y otro para los objetos en movimiento.
+Al mantener posteriors independientes, la dimensionalidad del problema se
+reduce considerablemente, haciéndolo viable en tiempo real.
+
+El sistema fue validado utilizando el vehículo Navlab11 equipado con
+escáneres láser SICK, recorriendo intersecciones concurridas de zonas
+urbanas. Los resultados demostraron la viabilidad del enfoque para operar a
+altas velocidades en entornos con múltiples vehículos en movimiento, con
+seguimiento robusto incluso ante situaciones de oclusión prolongada.
+
+\subsection{Limitaciones y conexión con alfredZ}
+
+A pesar de los avances presentados, el trabajo exhibe limitaciones relevantes
+para el problema abordado por alfredZ. En primer lugar, el \textbf{costo
+computacional de DATMO}, aunque menor que el enfoque generalizado, sigue
+siendo elevado: mantener posteriors separadas para cada objeto en movimiento
+requiere recursos significativos, especialmente cuando el número de agentes
+dinámicos es alto. En segundo lugar, el sistema fue diseñado y validado para
+\textbf{entornos exteriores con vehículos}; su aplicabilidad a entornos
+interiores con peatones, donde los patrones de movimiento son más
+impredecibles y el espacio es más reducido, no fue explorada. En tercer
+lugar, el enfoque \textbf{requiere modelos de movimiento previos} para los
+objetos rastreados, lo que limita su generalización a nuevos tipos de agentes
+dinámicos sin reentrenamiento.
+
+En alfredZ se adopta un enfoque diferente para el problema del mapeo en
+entornos con personas en movimiento. En lugar de mantener un estimador
+probabilístico explícito para cada agente dinámico, se recurre a detección
+semántica mediante redes neuronales convolucionales (YOLOv8) para identificar
+y filtrar en tiempo real las detecciones correspondientes a personas. Este
+enfoque reduce sustancialmente la carga computacional respecto de DATMO, y no
+requiere modelos de movimiento previos para los agentes. El impacto de los
+agentes dinámicos en la calidad del mapa se cuantifica a través de métricas
+específicas como las \textit{ghost cells} y la entropía del mapa, permitiendo
+evaluar de manera objetiva el desempeño de las distintas estrategias de
+exploración bajo diferentes niveles de concurrencia de peatones.
